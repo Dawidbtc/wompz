@@ -184,15 +184,46 @@ LexItem getNextToken(std::istream& in, int& linenumber){
                     }
                 }
                 break;
+                //IDENT case
             case INID:
+            {
+                if(isdigit(curr)||isalpha(curr)){
+                    lexeme+=curr;
+                }
+                if(!isalnum(curr)){
+                    lexeme+=curr;
+                    return LexItem(ERR,lexeme,linenumber);
+                }
+                char next = in.peek();
+                if(checkOperator(next)||next=='.'||next==' '||next=='\n'||!isalnum(next)||next==EOF){
+                        for(int i=0;i<lexeme.size();i++){
+                            lexeme[i]=toupper(lexeme[i]);
+                        }
+                    return LexItem(IDENT,lexeme,linenumber);
+                }
+                if(next==EOF){
+                        for(int i=0;i<lexeme.size();i++){
+                            lexeme[i]=toupper(lexeme[i]);
+                        }
+                    return LexItem(IDENT,lexeme,linenumber);
+                }
+                if(next=='\n'){
+                    linenumber++;
+                }
                 break;
+            }
             case INSTRING:
                 break;
             case ININT:
                 break;
             case INREAL:
                 break;
+            //comment state
             case INCOMMENT:
+                if(curr=='\n'){
+                    linenumber++;
+                    lexState=START;
+                }
                 break;
         }
     }
