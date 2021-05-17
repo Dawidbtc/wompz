@@ -1,7 +1,7 @@
+
+#include <string>
 #include <iostream>
 #include <map>
-#include <string>
-
 enum Token{
     //key words
     PROGRAM,PRINT,READ,INTEGER,END,IF,THEN,REAL,CHAR,
@@ -65,7 +65,6 @@ class LexItem{
     Token token;
     int line;
     std::string lexeme;
-
 public: 
     LexItem() {
         token = ERR;
