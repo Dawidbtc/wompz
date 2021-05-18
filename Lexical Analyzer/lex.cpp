@@ -20,6 +20,17 @@ bool checkOperator(char c){
     }
     return false;
 }
+//checks if IDENT is keyword.
+LexItem id_or_kw(const std::string& lexeme, int linenum){
+    Token t=IDENT;
+    for(auto const& x : keywordMap){
+        if(lexeme==x.first){
+            t=x.second;
+        }
+    }
+    LexItem ret(t,lexeme,linenum);
+    return ret;
+}
 LexItem getNextToken(std::istream& in, int& linenumber){
     enum State{START,INID,INSTRING,ININT,INREAL,INCOMMENT};
     //initial state is START
@@ -58,7 +69,7 @@ LexItem getNextToken(std::istream& in, int& linenumber){
                         for(int i=0;i<lexeme.size();i++){
                             lexeme[i]=toupper(lexeme[i]);
                         }
-                        return LexItem(IDENT,lexeme,linenumber);
+                        return id_or_kw(lexeme,linenumber);
                     }
                     else{
                      lexState=INID;
@@ -199,25 +210,81 @@ LexItem getNextToken(std::istream& in, int& linenumber){
                         for(int i=0;i<lexeme.size();i++){
                             lexeme[i]=toupper(lexeme[i]);
                         }
-                    return LexItem(IDENT,lexeme,linenumber);
+                    return id_or_kw(lexeme,linenumber);
                 }
                 if(next==EOF){
                         for(int i=0;i<lexeme.size();i++){
                             lexeme[i]=toupper(lexeme[i]);
                         }
-                    return LexItem(IDENT,lexeme,linenumber);
+                    return id_or_kw(lexeme,linenumber);
                 }
                 if(next=='\n'){
                     linenumber++;
                 }
                 break;
             }
+            //string case
             case INSTRING:
+            {
+                int d = in.peek();
+                if(curr=='\n'){
+                    return LexItem(ERR,lexeme,linenumber);
+                    linenumber++;
+                }
+                else if(lexeme[0]==curr){
+                    lexeme+=curr;
+                    lexeme=lexeme.substr(1,lexeme.length()-2);
+                    return LexItem(SCONST,lexeme,linenumber);
+                }else if(d==EOF){
+                    lexeme+=curr;
+                    return LexItem(ERR,lexeme,linenumber);
+                }
+                else{
+                    lexeme+=curr;
+                }
                 break;
+            }
+            //int case
             case ININT:
+            {
+                lexeme+=curr;
+                char c = in.peek();
+                if(c=='.'){
+                    lexState=INREAL;
+                }  
+                else if(c==' '||c=='\n'||c==EOF||!isdigit(c)){
+                    return LexItem(ICONST,lexeme,linenumber);
+                }
+                if(c=='\n'){
+                    linenumber++;
+                }
                 break;
+            }
+            //real case
             case INREAL:
+            {
+                char c = in.peek();
+                lexeme+=curr;
+                if(curr=='.'){
+                    if(c==' '||c==EOF||c=='\n'||!isdigit(c)){
+                        return LexItem(ERR,lexeme,linenumber);
+                    }
+                }else{
+                    if(c==' '||c==EOF||c=='\n'||!isdigit(c)){
+                        if(lexeme[0]=='.'){
+                            std::string zero="0";
+                            zero.append(lexeme);
+                            return LexItem(RCONST,zero,linenumber);
+                        }else{
+                        return LexItem(RCONST,lexeme,linenumber);
+                        }
+                    }
+                    if(c=='\n'){
+                        linenumber++;
+                    }
+                }
                 break;
+            }
             //comment state
             case INCOMMENT:
                 if(curr=='\n'){
