@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <map>
+using namespace std;
 enum Token{
     //key words
     PROGRAM,PRINT,READ,INTEGER,END,IF,THEN,REAL,CHAR,
@@ -17,7 +18,7 @@ enum Token{
     DONE
 };
 //token print map
-std::map<Token,std::string> tPrint = {
+map<Token,string> tPrint = {
     {PROGRAM, "PROGRAM"},
     {INTEGER, "INTEGER"},
     {REAL, "REAL"},
@@ -49,7 +50,7 @@ std::map<Token,std::string> tPrint = {
     {ERR, "ERR"},
     {DONE, "DONE"},
 };
-std::map<std::string,Token> keywordMap = {
+map<string,Token> keywordMap = {
 		{"PROGRAM",PROGRAM},
 		{"READ",READ},
 		{"INTEGER",INTEGER},
@@ -64,13 +65,13 @@ std::map<std::string,Token> keywordMap = {
 class LexItem{
     Token token;
     int line;
-    std::string lexeme;
+    string lexeme;
 public: 
     LexItem() {
         token = ERR;
         line = -1;
     }
-    LexItem(Token token, std::string lexeme, int line){
+    LexItem(Token token, string lexeme, int line){
         this->token = token;
         this->line = line;
         this->lexeme = lexeme;
@@ -84,7 +85,7 @@ public:
     Token GetToken() const{
         return token;
     }
-    std::string GetLexeme() const{
+    string GetLexeme() const{
         return lexeme;
     }
     int GetLinenum() const{

@@ -21,7 +21,7 @@ bool checkOperator(char c){
     return false;
 }
 //checks if IDENT is keyword.
-LexItem id_or_kw(const std::string& lexeme, int linenum){
+LexItem id_or_kw(const string& lexeme, int linenum){
     Token t=IDENT;
     for(auto const& x : keywordMap){
         if(lexeme==x.first){
@@ -31,11 +31,11 @@ LexItem id_or_kw(const std::string& lexeme, int linenum){
     LexItem ret(t,lexeme,linenum);
     return ret;
 }
-LexItem getNextToken(std::istream& in, int& linenumber){
+LexItem getNextToken(istream& in, int& linenumber){
     enum State{START,INID,INSTRING,ININT,INREAL,INCOMMENT};
     //initial state is START
     State lexState=START;
-    std::string lexeme;
+    string lexeme;
     char curr;
     //get characters
     while(in.get(curr)){
@@ -272,7 +272,7 @@ LexItem getNextToken(std::istream& in, int& linenumber){
                 }else{
                     if(c==' '||c==EOF||c=='\n'||!isdigit(c)){
                         if(lexeme[0]=='.'){
-                            std::string zero="0";
+                            string zero="0";
                             zero.append(lexeme);
                             return LexItem(RCONST,zero,linenumber);
                         }else{
