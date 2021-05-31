@@ -31,6 +31,7 @@ LexItem id_or_kw(const string& lexeme, int linenum){
     LexItem ret(t,lexeme,linenum);
     return ret;
 }
+//lexer function
 LexItem getNextToken(istream& in, int& linenumber){
     enum State{START,INID,INSTRING,ININT,INREAL,INCOMMENT};
     //initial state is START

@@ -3,6 +3,20 @@
 #include "parse.h"
 #include <vector>
 #include <queue>
+//checks if string is a int or rconst
+bool isNumber(string str){
+    int count=0;
+    for(int i=0;i<str.size();i++){
+        if(isdigit(str[i])||str[i]=='.'){
+            count++;
+        }
+    }
+    if(count!=str.size()){
+        return false;
+    }else{
+        return true;
+    }
+}
 map<string, Value> TempsResults;
 queue <Value> * ValQue;
 bool Prog(istream &in, int &line){
@@ -208,6 +222,12 @@ bool Var(istream& in, int& line){
         ParseError(line,"Undeclared Variable");
         return false;
     }
+    std::string varName = t.GetLexeme();
+    Token type = SymbolTable[varName];
+    std::string userInput;
+    int input; 
+    float finput;
+    bool sInput=true;
     if(t.GetToken()!=IDENT){
         ParseError(line,"unkown variable");
         return false;
@@ -217,9 +237,72 @@ bool Var(istream& in, int& line){
         cout<<"("<<t.GetLexeme()<<")"<<endl;
         return false;
     }   
-    if(readFlag){
-        std::string check;
-        std::cin>>check;
+    if(readFlag&&TempsResults.count(t.GetLexeme())==0){
+        cin>>userInput;
+        if(isNumber(userInput)){
+            input=stoi(userInput);
+            finput=stof(userInput);
+            sInput=false;
+        }
+        if(type==INTEGER){  
+            if(sInput){
+                ParseError(line,"Cant read in alphanumeric characters into a integer");
+                return false;
+            }else{
+                Value val1(input);
+                TempsResults[varName]=val1;
+            }
+        }
+        else if(type==REAL){
+            if(sInput){
+                ParseError(line,"Cant read in alphanumeric characters into a real");
+                return false;
+            }else{
+                Value val1(finput);
+                TempsResults[varName]=val1;
+            }
+        }
+        else if(type==CHAR){
+            Value val1(userInput);
+            TempsResults[varName]=val1;
+        }else{
+            ParseError(line,"Cannot read in to types other than INT,REAL,CHAR");
+        }
+    }
+    else if(readFlag&&TempsResults.count(t.GetLexeme())>0){
+        cin>>userInput;
+        if(isNumber(userInput)){
+            input=stoi(userInput);
+            finput=stof(userInput);
+            sInput=false;
+        }
+        if(TempsResults[varName].GetType()==VINT){
+            if(sInput){
+                ParseError(line,"Cant read in alphanumeric characters into a real");
+                return false;
+            }else{
+                TempsResults[varName].SetInt(input);
+            }
+        }
+        else if(TempsResults[varName].GetType()==VREAL){
+            if(sInput){
+                ParseError(line,"Cant read in alphanumeric characters into a real");
+                return false;
+            }else{
+            TempsResults[varName].SetReal(finput);
+            }
+        }
+        else if(TempsResults[varName].GetType()==VCHAR){
+            if(sInput){
+                ParseError(line,"Cant read in alphanumeric characters into a real");
+                return false;
+            }else{
+                TempsResults[varName].SetChar(userInput);
+            }
+        }else{
+            ParseError(line,"Cannot read in to types other than INT,REAL,CHAR");
+            return false;
+        }
     }
     return true;
 }
@@ -297,7 +380,7 @@ bool AssignStmt(istream& in, int& line){
 	}
 	return status;	
 }
-
+//Expr Function
 bool Expr(istream& in, int& line, Value& retVal){
 	Value val1;
     Value val2;
@@ -341,7 +424,7 @@ bool Expr(istream& in, int& line, Value& retVal){
 	Parser::PushBackToken(next);
 	return true;
 }
-
+//Term function
 bool Term(istream& in, int& line, Value & retVal){
 	Value val1;
     Value val2;
@@ -389,6 +472,7 @@ bool Term(istream& in, int& line, Value & retVal){
 	Parser::PushBackToken(next);
 	return true;
 }
+//SFactor Function
 bool SFactor(istream& in, int& line, Value & retVal){
     bool status;
     LexItem t;
@@ -421,7 +505,7 @@ bool SFactor(istream& in, int& line, Value & retVal){
 	}
     return status;
 }
-
+//Factor function. 
 bool Factor(istream& in, int& line, int sign, Value& retVal){
     bool status=false;
     LexItem t;
@@ -486,7 +570,7 @@ bool Factor(istream& in, int& line, int sign, Value& retVal){
 	ParseError(line,"Non recognized Factor");
 	return false;
 }
-
+//Print Statement
 bool PrintStmt(istream& in, int& line){
     bool status=false;
     ValQue = new queue<Value>;   
@@ -513,7 +597,7 @@ bool PrintStmt(istream& in, int& line){
     cout<<endl;
     return status;
 }
-
+//Expression List
 bool ExprList(istream& in, int& line){
     bool status=false;
     Value val1;
@@ -534,6 +618,7 @@ bool ExprList(istream& in, int& line){
     } 
     return status;   
 }
+//If Statement. Calls Logic Expr to determine if it should run body.
 bool IfStmt(istream &in, int& line){
     bool status;
     LexItem next;

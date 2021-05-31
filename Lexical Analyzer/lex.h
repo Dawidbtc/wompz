@@ -3,6 +3,7 @@
 #include <iostream>
 #include <map>
 using namespace std;
+//all types of tokens
 enum Token{
     //key words
     PROGRAM,PRINT,READ,INTEGER,END,IF,THEN,REAL,CHAR,

@@ -4,7 +4,7 @@
 #include <map>
 using namespace std;
 enum ValType {VINT,VREAL,VCHAR,VBOOL,VERR};
-
+//Value obj
 class Value{
     ValType type;
     bool Booltemp;

@@ -3,6 +3,7 @@
 #include "val.cpp"
 map<string, bool> defineVar;
 map<string, Token> SymbolTable;
+//parser namespace
 namespace Parser {
 	bool pushBack = false;
 	LexItem	Pushed;
