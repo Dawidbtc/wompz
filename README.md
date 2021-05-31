@@ -24,3 +24,35 @@ Here is the Backus-Nauf form for the language:
 * Var = IDENT
 * Sign + | -
 * Factor = IDENT | ICONST | RCONST | SCONST | (Expr)
+----------------------------------------------------------
+<h2>How to Install:
+<h3><b>Windows:</b>
+<ol>
+<li>Install any version of MinGw
+<li>Navigate to source code with Windows Command Prompt
+<li>Compile source code: g++ -std=c++11 driver.cpp -o [name you want of the compiled program but without the [] ]
+<li>Then move your code .txt file to where your source code is located.
+<li>Run your code with this command: ./"nameofcompiledsource" "filename" without the quotes
+</ol>
+<li>So for example this would be a clean compilation:
+<li>g++ -std=c++11 driver.cpp -o wompz
+<li>./wompz code.txt
+
+<h3><b>Linux and MacOS:</b></h3>
+<ol>
+<li>Get g++.
+<ul><li>sudo apt-get install g++(Debian/Ubuntu)
+<li>sudo dnf install g++(Redhat/Fedora)
+<li>sudo pacman install g++(Arch)
+<li>brew install gcc48(MacOs)
+<li>Your computer may have g++ preinstalled already. You can check by running g++ command.
+</ul>
+<li>Navigate to source code with terminal
+<li>Compile source code. g++ -std=c++11 driver.cpp -o [name you want of the compilded program but without the [] ]
+<li>Move code over to source code location.
+<li>Run code with compiled program: ./"nameofcompiledsource" "filename" without the quotes
+</ol>
+<ul>
+<li>So for example this would be a clean compilation:
+<li>g++ -std=c++11 driver.cpp -o wompz
+<li>./wompz code
