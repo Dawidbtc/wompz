@@ -1,9 +1,8 @@
 #include <iostream>
 #include "../Lexical Analyzer/lex.cpp"
-
+#include "val.cpp"
 map<string, bool> defineVar;
 map<string, Token> SymbolTable;
-
 namespace Parser {
 	bool pushBack = false;
 	LexItem	Pushed;
@@ -40,14 +39,14 @@ extern bool Decl(istream& in, int& line);
 extern bool PrintStmt(istream& in, int& line);
 extern bool IfStmt(istream& in, int& line);
 extern bool ReadStmt(istream& in, int& line);
-extern bool IdList(istream& in, int& line, LexItem tok);
+extern bool IdList(istream& in, int& line, LexItem &type);
 extern bool VarList(istream& in, int& line);
 extern bool Var(istream& in, int& line);
 extern bool AssignStmt(istream& in, int& line);
 extern bool ExprList(istream& in, int& line);
-extern bool LogicExpr(istream& in, int& line);
-extern bool Expr(istream& in, int& line);
-extern bool Term(istream& in, int& line);
-extern bool SFactor(istream& in, int& line);
-extern bool Factor(istream& in, int& line, int sign);
+extern bool LogicExpr(istream& in, int& line,Value & retVal);
+extern bool Expr(istream& in, int& line,Value& retVal);
+extern bool Term(istream& in, int& line, Value& retVal);
+extern bool SFactor(istream& in, int& line, Value& retVal);
+extern bool Factor(istream& in, int& line, int sign, Value& retVal);
 extern int ErrCount();
